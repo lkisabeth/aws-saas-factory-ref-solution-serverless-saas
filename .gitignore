@@ -1,1 +1,2 @@
-/server/cdk.out/
+/server/cdk/cdk.out
+/server/cdk/node_modules
