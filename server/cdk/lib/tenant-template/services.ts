@@ -1,4 +1,3 @@
-import * as path from 'path';
 import { PythonFunction } from '@aws-cdk/aws-lambda-python-alpha';
 import { Duration, Aws } from 'aws-cdk-lib';
 import {
@@ -10,7 +9,7 @@ import {
 } from 'aws-cdk-lib/aws-iam';
 import { Runtime, LayerVersion } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
-import { RestApi, LambdaIntegration } from 'aws-cdk-lib/aws-apigateway';
+import { RestApi, LambdaIntegration, AuthorizationType } from 'aws-cdk-lib/aws-apigateway';
 import { Microservice } from './microservice';
 import { IdentityDetails } from '../interfaces/identity-details';
 
@@ -142,5 +141,30 @@ export class Services extends Construct {
     userNameResource
       .addResource('enable')
       .addMethod('PUT', new LambdaIntegration(userManagementServices));
+
+    const aiConciergeService = new PythonFunction(this, 'AIConciergeService', {
+      entry: srcPath + '/AIConciergeService',
+      runtime: Runtime.PYTHON_3_10,
+      index: 'ai_concierge.py',
+      handler: 'lambda_handler',
+      timeout: Duration.seconds(300),
+      layers: [props.lambdaServerlessSaaSLayers],
+      environment: {
+        IDP_DETAILS: JSON.stringify(props.idpDetails),
+      },
+    });
+
+    aiConciergeService.addToRolePolicy(
+      new PolicyStatement({
+        actions: ['secretsmanager:GetSecretValue'],
+        resources: [`arn:aws:secretsmanager:${Aws.REGION}:${Aws.ACCOUNT_ID}:secret:OpenAI_API_Key-*`],
+      })
+    );
+
+    const aiConcierge = props.restApi.root.addResource('ai-concierge');
+    aiConcierge.addMethod('POST', new LambdaIntegration(aiConciergeService), {
+      authorizationType: AuthorizationType.CUSTOM,
+      apiKeyRequired: true
+    });
   }
 }

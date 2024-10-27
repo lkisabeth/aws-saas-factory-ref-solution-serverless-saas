@@ -1,0 +1,33 @@
+<div class="ai-concierge-container" [class.minimized]="isMinimized">
+  <div class="chat-header">
+    <span>AI Concierge</span>
+    <button class="minimize-button" (click)="toggleMinimize()">
+      {{ isMinimized ? '▲' : '▼' }}
+    </button>
+  </div>
+  
+  <div class="chat-messages">
+    <div *ngFor="let message of messages" [ngClass]="{'user-message': message.role === 'user', 'assistant-message': message.role === 'assistant'}">
+      <strong>{{ message.role === 'user' ? 'You' : 'AI Concierge' }}:</strong> {{ message.content }}
+    </div>
+    
+    <div *ngIf="isLoading" class="message-loading">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+  
+  <div class="chat-input">
+    <input 
+      [(ngModel)]="userInput" 
+      (keyup.enter)="sendMessage()" 
+      placeholder="Type your message..."
+      [disabled]="isLoading">
+    <button 
+      (click)="sendMessage()" 
+      [disabled]="isLoading || !userInput.trim()">
+      Send
+    </button>
+  </div>
+</div>

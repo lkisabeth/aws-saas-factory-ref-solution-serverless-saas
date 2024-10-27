@@ -35,12 +35,16 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 
+import { AIConciergeComponent } from './views/ai-concierge/ai-concierge.component';
+import { AIConciergeService } from './services/ai-concierge.service';
+
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     AuthComponent,
     UnauthorizedComponent,
+    AIConciergeComponent,
   ],
   imports: [
     AmplifyAuthenticatorModule,
@@ -74,6 +78,7 @@ import { MatTableModule } from '@angular/material/table';
     MatTableModule,
   ],
   providers: [
+    AIConciergeService,
     HttpClientModule,
     {
       provide: LocationStrategy,
