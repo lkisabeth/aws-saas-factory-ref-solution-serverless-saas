@@ -9,3 +9,13 @@ export interface INavData {
   divider?: boolean;
   class?: string;
 }
+
+export interface AIResponseBody {
+  message: string;
+  threadId?: string;
+}
+
+export interface APIGatewayResponse {
+  statusCode: number;
+  body: string;
+}

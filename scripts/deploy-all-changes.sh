@@ -56,10 +56,15 @@ npx cdk deploy serverless-saas-ref-arch-tenant-template-pooled --require-approva
 
 # 3. Update client applications
 echo "📤 Deploying client applications..."
+
+# Set required environment variables for client deployment
+export CDK_PARAM_REG_API_GATEWAY_URL=$(aws cloudformation describe-stacks --stack-name ControlPlaneStack --query "Stacks[0].Outputs[?OutputKey=='controlPlaneAPIEndpoint'].OutputValue" --output text)
+export CDK_COGNITO_ADMIN_USER_POOL_ID=$(aws cloudformation describe-stacks --stack-name ControlPlaneStack --query "Stacks[0].Outputs[?contains(OutputKey,'ControlPlaneIdpUserPoolId')].OutputValue" --output text)
+export CDK_COGNITO_ADMIN_CLIENT_ID=$(aws cloudformation describe-stacks --stack-name ControlPlaneStack --query "Stacks[0].Outputs[?contains(OutputKey,'ControlPlaneIdpClientId')].OutputValue" --output text)
+
 cd ../../client/client-template
 npm install
 npx cdk deploy --require-approval never
-
 echo "✨ Deployment complete!"
 
 # Display URLs

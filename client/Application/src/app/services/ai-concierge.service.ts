@@ -1,17 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
-
-interface AIResponseBody {
-  message: string;
-  threadId?: string;
-}
-
-interface APIGatewayResponse {
-  statusCode: number;
-  body: string;
-}
+import { Observable, throwError, map, catchError } from 'rxjs';
+import { AIResponseBody, APIGatewayResponse } from '../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
