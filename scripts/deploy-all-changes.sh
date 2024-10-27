@@ -8,10 +8,19 @@ fi
 
 # Set up environment variables
 export CDK_PARAM_SYSTEM_ADMIN_EMAIL="$1"
+export CDK_PARAM_TENANT_ID="pooled"
 export REGION=$(aws configure get region)
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 export CDK_PARAM_S3_BUCKET_NAME="serverless-saas-${ACCOUNT_ID}-${REGION}"
 export CDK_SOURCE_NAME="source.zip"
+
+export CDK_PARAM_CONTROL_PLANE_SOURCE='sbt-control-plane-api'
+export CDK_PARAM_ONBOARDING_DETAIL_TYPE='Onboarding'
+export CDK_PARAM_PROVISIONING_DETAIL_TYPE=$CDK_PARAM_ONBOARDING_DETAIL_TYPE
+export CDK_PARAM_OFFBOARDING_DETAIL_TYPE='Offboarding'
+export CDK_PARAM_DEPROVISIONING_DETAIL_TYPE=$CDK_PARAM_OFFBOARDING_DETAIL_TYPE
+export CDK_PARAM_PROVISIONING_EVENT_SOURCE="sbt-application-plane-api"
+export CDK_PARAM_APPLICATION_NAME_PLANE_SOURCE="sbt-application-plane-api"
 
 echo "🚀 Starting deployment process..."
 
